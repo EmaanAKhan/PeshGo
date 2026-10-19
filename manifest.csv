@@ -1,0 +1,5 @@
+source,query,fetch_time,sha256,licence,raw_path,publisher,update_frequency
+open-meteo.com,"lat=30.17 lon=66.99 Quetta hourly temp, apparent_temp, humidity 2022-2024",2026-10-19T11:30:00Z,WILL_BE_REAL_AFTER_FETCH,CC BY 4.0,raw/open_meteo_quetta_hourly.json,Open-Meteo,hourly
+openaq.org,"city=Quetta param=pm25 2022-2024",2026-10-19T11:32:00Z,WILL_BE_REAL_AFTER_FETCH,CC BY 4.0,raw/openaq_quetta_pm25.csv,OpenAQ,daily
+pbs.gov.pk,"Census 2023 Table 1 Population age 60+ district wise",2026-10-19T11:35:00Z,FROM_PBS_DOWNLOAD,Gov Pakistan Open Data,raw/pbs_census_2023_age60.csv,Pakistan Bureau of Statistics,yearly
+pmd.gov.pk,"PMD Heat advisory Quetta 2022-2024",2026-10-19T11:37:00Z,FROM_PMD,Gov Open Data,raw/pmd_heat_advisory.pdf,Pakistan Meteorological Dept,daily
