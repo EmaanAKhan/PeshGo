@@ -1,0 +1,76 @@
+# PeshGo: 24-hour PM2.5 forecast for Lahore, with Urdu advice.
+# Every setting the pipeline uses lives here, so a run is reproducible from
+# this file plus the raw files listed in data/manifest.csv.
+
+project: PeshGo
+city: Lahore
+center: { lat: 31.5204, lon: 74.3587 }
+display_timezone: Asia/Karachi   # all data is stored in UTC; PKT is for display only
+
+# Hourly history to fetch. Open-Meteo's CAMS air-quality archive for Lahore
+# starts around September 2022, so the shared window starts there.
+history_start: "2022-09-01"
+
+openaq:
+  parameter: pm25
+  radius_m: 25000          # OpenAQ's maximum search radius
+  location_ids: []         # empty: discover every PM2.5 location in the radius
+  min_hours: 2000          # ignore locations with less history than this
+  page_limit: 1000
+  chunk_days: 90           # history in 90-day windows (multi-year requests time out with HTTP 408)
+  requests_per_minute: 50  # stays under OpenAQ's free-tier limit
+
+openmeteo:
+  weather_vars: [temperature_2m, relative_humidity_2m, wind_speed_10m, wind_direction_10m, boundary_layer_height, precipitation]
+  air_vars: [pm2_5]
+  chunk_days: 92
+
+firms:
+  # West, South, East, North: Punjab on both sides of the border, upwind of Lahore
+  # in the post-monsoon season.
+  bbox: [70.5, 28.5, 77.5, 33.5]
+  archive_source: VIIRS_SNPP_SP   # standard-processing archive
+  recent_source: VIIRS_SNPP_NRT   # near-real-time, last weeks
+  day_range: 5                    # NASA's area API accepts 1 to 5 days per request
+  upwind_cone_deg: 60
+
+model:
+  horizon_hours: 24        # target: mean PM2.5 over the next 24 hours
+  min_target_hours: 18     # a target needs at least 18 of those 24 hours observed
+  quantiles: [0.1, 0.5, 0.9]
+  seed: 42
+  # Time-based split. Fixed before results; never change it to improve a score.
+  train_end: "2024-10-31"
+  valid_end: "2025-03-31"  # the test set is everything after this date
+
+# Declared baseline (also in DATASET_DECLARATION.md). Fixed before results.
+baseline: persistence_24h  # next-24h mean = mean of the last 24 hours
+
+quality:
+  pm25_min: 0
+  pm25_max: 1000
+  stuck_hours: 6
+  fill_max_gap_hours: 2
+  flag_gap_hours: 24
+  stale_hours: 3
+  low_cost_humid_rh: 75
+  temp_range_c: [-10, 55]
+  drift_psi_flag: 0.25
+
+# US EPA AQI breakpoints for 24-hour PM2.5 (2024 revision), in µg/m³.
+categories:
+  - { name: Good, name_ur: اچھی, max: 9.0, color: "#2e9d57" }
+  - { name: Moderate, name_ur: معتدل, max: 35.4, color: "#d6b100" }
+  - { name: Unhealthy for sensitive groups, name_ur: حساس افراد کے لیے مضر, max: 55.4, color: "#e3782d" }
+  - { name: Unhealthy, name_ur: مضر صحت, max: 125.4, color: "#d43d3d" }
+  - { name: Very unhealthy, name_ur: انتہائی مضر صحت, max: 225.4, color: "#8e3fb0" }
+  - { name: Hazardous, name_ur: خطرناک, max: 100000, color: "#7a1f2b" }
+
+paths:
+  data: data
+  raw: data/raw
+  manifest: data/manifest.csv
+  warehouse: data/warehouse.duckdb
+  models: models
+  reports: reports
+  snapshot: data/snapshot

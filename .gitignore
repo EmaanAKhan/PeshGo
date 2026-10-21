@@ -1,0 +1,26 @@
+# secrets: never committed
+.env
+
+# data is rebuilt by `make data` from the manifest. Raw files, the warehouse and the snapshot stay local;
+# the small evidence files below are committed (the manifest is committed as manifest.csv at the repository root).
+data/*
+!data/quality_log.csv
+!data/runs.csv
+!data/approvals.csv
+
+# trained model and bulky outputs
+models/
+build/
+reports/test_predictions.parquet
+
+# python and local state
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/
+.prefect/
+
+# logs from local runs
+*.log

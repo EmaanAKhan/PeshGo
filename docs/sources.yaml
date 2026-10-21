@@ -1,0 +1,32 @@
+# Trusted documents for the Insight Agent (RAG). Every document has a named
+# publisher and a URL. `make docs` downloads each one into the raw layer and
+# records it in data/manifest.csv. Add Pakistani advisories here as you find
+# them (keep the original publisher's URL).
+
+- id: who_aq_factsheet
+  title: Ambient (outdoor) air quality and health (fact sheet)
+  publisher: World Health Organization
+  url: https://www.who.int/news-room/fact-sheets/detail/ambient-(outdoor)-air-quality-and-health
+  type: html
+  licence: WHO website terms of use; quoted with attribution
+
+- id: airnow_aqi_basics
+  title: AQI Basics
+  publisher: US EPA / AirNow
+  url: https://www.airnow.gov/aqi/aqi-basics/
+  type: html
+  licence: US government work (public domain)
+
+- id: airnow_pm_guide
+  title: Air Quality Guide for Particle Pollution
+  publisher: US EPA / AirNow
+  url: https://document.airnow.gov/air-quality-guide-for-particle-pollution.pdf
+  type: pdf
+  licence: US government work (public domain)
+
+- id: punjab_clean_air_plan
+  title: Punjab Clean Air Action Plan (Smog Commission, Annex D2)
+  publisher: Environment Protection Department, Government of the Punjab
+  url: https://epd.punjab.gov.pk/system/files/Annex%20D2%20Punjab%20Clean%20Air%20Action%20Plan_0.pdf
+  type: pdf
+  licence: Government of the Punjab public document; quoted with attribution

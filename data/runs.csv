@@ -1,0 +1,12 @@
+run_id,started_utc,finished_utc,status,seconds,new_raw_files,sources_failed,gold_pm25_rows,feature_rows,quality_decisions,forecasts,forecast_issued_utc,note
+run-20261020T045448,2026-10-20T04:54:48.263011+00:00,2026-10-20T04:58:21.905841+00:00,success_with_warnings,213.6,3,openaq: https://api.openaq.org/v3/sensors/16034748/hours: HTTP 500: Internal Server Error,9489,9209,8,,,no trained model yet (run: python -m saafhawa train)
+run-20261020T055650,2026-10-20T05:56:50.376814+00:00,2026-10-20T05:59:48.680135+00:00,success,178.3,0,,38828,37732,9,51,2026-10-20 03:00:00+00:00,
+run-20261020T160301,2026-10-20T16:03:01.373663+00:00,2026-10-20T16:08:45.272991+00:00,success_with_warnings,343.9,57,"openaq: 5 sensors failed, e.g. sensor 16034748: https://api.openaq.org/v3/sensors/16034748/hours: HTTP 500: Internal Server Error",449283,443409,9,73,2026-10-20 14:00:00+00:00,
+run-20261020T162248,2026-10-20T16:22:48.039499+00:00,2026-10-20T16:28:50.666220+00:00,success_with_warnings,362.6,51,"openaq: 5 sensors failed, e.g. sensor 16034748: https://api.openaq.org/v3/sensors/16034748/hours: HTTP 500: Internal Server Error",449340,443466,9,73,2026-10-20 14:00:00+00:00,
+run-20261020T170530,2026-10-20T17:05:30.421571+00:00,2026-10-20T17:18:37.022388+00:00,success_with_warnings,786.6,57,"openaq: 5 sensors failed, e.g. sensor 16034748: https://api.openaq.org/v3/sensors/16034748/hours: HTTP 500: Internal Server Error",449358,443484,9,73,2026-10-20 15:00:00+00:00,
+run-20261021T034230,2026-10-21T03:42:30.224159+00:00,2026-10-21T03:44:19.003552+00:00,running,108.8,,,,,,,,
+run-20261021T034228,2026-10-21T03:42:28.853985+00:00,2026-10-21T03:44:19.106980+00:00,running,110.3,,,,,,,,
+run-20261021T034230,2026-10-21T03:42:30.462947+00:00,2026-10-21T03:44:19.287960+00:00,running,108.8,,,,,,,,
+run-20261021T042044,2026-10-21T04:20:44.472795+00:00,2026-10-21T04:21:09.041921+00:00,failed,24.6,0,,,,,,,"RuntimeError: Manifest check failed: 2 changed, 0 missing. First: ['raw/open_meteo/recent/weather_20261021T03.json', 'raw/open_meteo/recent/air_20261021T03.json']"
+run-20261021T042235,2026-10-21T04:22:35.074457+00:00,2026-10-21T04:24:23.870347+00:00,success,108.8,0,,463487,457494,9,73,2026-10-21 03:00:00+00:00,
+run-20261021T043715,2026-10-21T04:37:15.823137+00:00,2026-10-21T04:48:39.884983+00:00,success,684.1,0,,463487,457494,9,73,2026-10-21 03:00:00+00:00,

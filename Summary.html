@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>PeshGo summary</title><style>
+@page { size: A4; margin: 10mm 11mm; }
+:root { --ink:#1b1f24; --muted:#5b6470; --line:#d9dee4; --accent:#0f6b5c; --bad:#b4372f; }
+* { box-sizing: border-box; } body { font: 9.1pt/1.34 "Segoe UI", Arial, sans-serif; color: var(--ink); margin: 0; }
+h1 { font-size: 16pt; margin: 0; } h1 span { color: var(--accent); font-weight: 600; } .sub { color: var(--muted); margin: 2px 0 6px; }
+h2 { font-size: 10pt; margin: 8px 0 3px; color: var(--accent); text-transform: uppercase; letter-spacing: .04em; }
+p { margin: 0 0 3px; } table { border-collapse: collapse; width: 100%; margin: 2px 0 3px; }
+th, td { border-bottom: 1px solid var(--line); padding: 2px 5px; text-align: left; font-variant-numeric: tabular-nums; }
+th { font-weight: 600; color: var(--muted); font-size: 8.3pt; } td.n, th.n { text-align: right; } tr.us td { font-weight: 700; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; } ul { margin: 0 0 3px; padding-left: 14px; } li { margin: 1px 0; }
+.bad { color: var(--bad); font-weight: 600; } .foot { color: var(--muted); font-size: 7.8pt; margin-top: 5px; border-top: 1px solid var(--line); padding-top: 3px; }
+</style></head><body>
+<h1>PeshGo · <bdi lang="ur">پیشگو</bdi> <span>— 24-hour PM2.5 forecast for Lahore</span></h1>
+<p class="sub">HackInsight '26 · Data-to-Decision · results from the real-data run, model trained 2026-10-21 04:35 UTC</p>
+<h2>Problem and decision</h2>
+<p>Smog advisories assume you can stay indoors. Outdoor workers, children and their schools can't, and the US EPA guide lists outdoor workers among the groups most exposed. PeshGo forecasts the mean PM2.5 of the next 24 hours, gives a likely range, and turns it into advice in Urdu and English for <b>outdoor workers, parents and schools, or everyone</b>, with a message to share.</p>
+<div class="cols"><div>
+<h2>Data (real; no synthetic data)</h2>
+<table><tr><th>Source</th><th>Role</th><th class="n">Volume</th></tr>
+<tr><td>OpenAQ v3, PM2.5 monitors ≤25 km</td><td>target</td><td class="n">543,283 rows, 78 sensors</td></tr>
+<tr><td>Open-Meteo ERA5 weather</td><td>features</td><td class="n">36,270 h</td></tr>
+<tr><td>Open-Meteo CAMS (Copernicus)</td><td>feature, 2nd baseline</td><td class="n">36,270 h</td></tr>
+<tr><td>NASA FIRMS fires (not on the track list)</td><td>upwind fires</td><td class="n">761 detections</td></tr></table>
+<p>2022-09-02 to 2026-10-21. Raw files are kept unchanged with SHA-256 in <code>manifest.csv</code>; <code>make data</code> rebuilds everything.</p>
+<h2>Data Quality Agent (latest run)</h2>
+<ul><li><b>FIX</b> 88,982 rows (duplicates, numeric text)</li><li><b>FILL</b> 14,127 hours in gaps of 2 h or less, marked</li>
+<li><b>FLAG</b> 299,954 rows: long outages, stuck sensors, humid-air readings from low-cost sensors, missing boundary-layer height</li>
+<li><b>PROPOSE</b> 14 sensors to drop, <b>waiting for a person</b> (64 pending approvals)</li></ul>
+</div><div>
+<h2>Model against the declared baseline</h2>
+<p>Gradient-boosted quantile model (p10/p50/p90), time split with a 24 h purge, tuned on validation only, <b>test scored once</b>.</p>
+<table><tr><th>Test period (398,898 rows)</th><th class="n">MAE µg/m³</th><th class="n">Skill vs baseline / CAMS (+ is better)</th></tr>
+<tr><td>Persistence (declared baseline)</td><td class="n">18.28</td><td class="n">—</td></tr>
+<tr><td>CAMS forecast</td><td class="n">38.98</td><td class="n">—</td></tr>
+<tr class="us"><td>PeshGo</td><td class="n">19.19</td><td class="n">-3.7% / +50.8%</td></tr></table>
+<p>Validation (Nov 2024 to Mar 2025, winter): baseline 46.05, CAMS 88.4, PeshGo 38.35 (+15.8% vs baseline). Rows used: training 19,095, validation 5,688, test 398,898. Category accuracy 61.7% (baseline 62.8%).
+The 80% range covers 92% of test outcomes (aimed at 80%; raw quantiles covered 54% on validation before calibration).</p>
+<h2>Errors by group</h2><ul><li>Hazardous hours (n = 32978): MAE 51.2, worse than the baseline (37.1)</li><li>rest of year: 13.6 vs baseline 14.5; smog season (Oct-Jan): 34.4 vs baseline 28.7</li></ul>
+</div></div>
+<h2>Agents, app and pipeline</h2>
+<p>Insight Agent: retrieval over WHO, US EPA AirNow and the Punjab Clean Air Action Plan; forecast numbers come only from stored rows and are shown with their row IDs; every claim is cited; false-premise questions are corrected; off-topic gets "I don't know"; Urdu in and out. Supervisor: one failing source never stops a run. Drift monitor and human approval are built in. The public app is a phone-style page (Urdu or English, share button, installable) that each pipeline run rebuilds; 3 completed hourly Prefect runs are recorded in prefect_runs.csv.
+Median pipeline run 178 s. </p>
+<h2>Notes</h2>
+<ul><li>The forecast is the city-wide 24-hour average across Lahore's monitors, not a single street. Readings from low-cost sensors in humid air are marked, not corrected.</li>
+<li>Information, not medical advice: follow Punjab government and school notices. The Urdu wording was drafted with AI help and the app says so.</li></ul>
+<p class="foot">Training 285.7 s, 24.7 MB peak. AI use is disclosed in AI_Use_Log.md. Code, manifest and logs: github.com/EmaanAKhan/Shaoor.</p></body></html>
